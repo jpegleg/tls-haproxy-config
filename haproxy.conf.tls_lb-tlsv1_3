@@ -1,0 +1,23 @@
+global
+    maxconn 4096
+    user haproxy
+    group haproxy
+    daemon
+    tune.ssl.default-dh-param  2048
+    ssl-default-bind-ciphers TLS13-AES-256-GCM-SHA384:TLS13-AES-128-GCM-SHA256:TLS13-CHACHA20-POLY1305-SHA256:EECDH+AESGCM:EECDH+CHACHA20
+    ssl-default-bind-options no-sslv3 no-tlsv10 no-tlsv11
+    ssl-server-verify none
+    stats socket /var/run/haproxysock level admin
+  defaults
+    mode http
+    timeout connect 10000ms
+    timeout client 10000ms
+    timeout server 10000ms
+  listen http-in
+    bind *:443 ssl crt /etc/keycert.pem
+    balance roundrobin
+    server node1 node1:443 maxconn 1023 check port 443
+    server node2 node2:443 maxconn 1023 check port 443
+    server node3 node3:443 maxconn 1023 check port 443
+    server node4 node4:443 maxconn 1023 check port 443
+    server node5 node5:443 maxconn 1023 check port 443

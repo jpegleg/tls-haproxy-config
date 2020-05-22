@@ -1,0 +1,52 @@
+
+- name: Update and Upgrade centos
+  hosts: haproxy
+  tasks:
+
+  - name: upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+
+  - name: install haproxy
+    yum:
+      name: haproxy
+      state: latest
+
+  - name: set firewalld to allow https
+    shell: firewall-cmd --add-service=https --permanent
+    args:
+      executable: /bin/bash
+  
+  - name: set firewalld to allow http
+    shell: firewall-cmd --add-service=http --permanent
+    args:
+      executable: /bin/bash
+
+  - name: set firewalld to reload
+    shell: firewall-cmd --reload
+    args:
+      executable: /bin/bash
+
+
+- name: deploy config setup
+  hosts: haproxy
+  tasks:
+
+  - name: deploy haproxy.cfg
+    copy:
+      src: /srv/haproxy.conf.tlsoffload_lb-default
+      dest: /etc/haproxy/haproxy.cfg
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: start haproxy
+    systemd:
+      state: started
+      name: haproxy
+
+  - name: enable haproxy
+    systemd:
+      enabled: yes
+      name: haproxy

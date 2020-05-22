@@ -3,7 +3,7 @@
   hosts: haproxy
   tasks:
 
-  - name: upgrade all packages - name: apt-get update
+  - name: upgrade all packages
     apt:
       upgrade: yes
       update_cache: yes
@@ -14,6 +14,11 @@
       name: haproxy
       state: latest
 
+  - name: install ufw
+    apt:
+      name: ufw
+      state: latest
+      
   - name: set ufw to allow https
     shell: ufw allow https
     args:

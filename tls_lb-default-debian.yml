@@ -1,0 +1,52 @@
+
+- name: Update and Upgrade debian
+  hosts: haproxy
+  tasks:
+
+  - name: upgrade all packages - name: apt-get update
+    apt:
+      upgrade: yes
+      update_cache: yes
+      cache_valid_time: 86400
+      
+  - name: install haproxy
+    apt:
+      name: haproxy
+      state: latest
+
+  - name: set ufw to allow https
+    shell: ufw allow https
+    args:
+      executable: /bin/bash
+  
+  - name: set ufw to allow http
+    shell: ufw allow http
+    args:
+      executable: /bin/bash
+
+  - name: set ufw to reload
+    shell: ufw reload
+    args:
+      executable: /bin/bash
+
+- name: deploy config setup
+  hosts: haproxy
+  tasks:
+
+  - name: deploy haproxy.cfg
+    copy:
+      src: /srv/haproxy.conf.tls_lb-default
+      dest: /etc/haproxy/haproxy.cfg
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: start haproxy
+    systemd:
+      state: started
+      name: haproxy
+
+  - name: enable haproxy
+    systemd:
+      enabled: yes
+      name: haproxy

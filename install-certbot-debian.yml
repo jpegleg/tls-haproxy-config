@@ -1,0 +1,44 @@
+- name: Update and Upgrade debian
+  hosts: haproxy
+  tasks:
+
+  - name: upgrade all packages 
+    apt:
+      upgrade: yes
+      update_cache: yes
+      cache_valid_time: 86400
+
+  - name: add certbot repo
+    shell: add-apt-repository -y ppa:certbot/certbot
+    args:
+      executable: /bin/bash 
+      warn: no
+
+  - name: install certbot
+    apt:
+      name: certbot
+      state: latest
+      
+  - name: set ufw to allow 8888/tcp for LE SNI
+    shell: ufw allow 8888/tcp
+    args:
+      executable: /bin/bash 
+      warn: no     
+
+  - name: set ufw to allow https
+    shell: ufw allow https
+    args:
+      executable: /bin/bash 
+      warn: no  
+      
+  - name: set ufw to allow http
+    shell: ufw allow htp
+    args:
+      executable: /bin/bash 
+      warn: no  
+      
+  - name: set ufw to reload
+    shell: ufw reload
+    args:
+      executable: /bin/bash 
+      warn: no     

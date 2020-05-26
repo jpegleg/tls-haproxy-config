@@ -17,13 +17,7 @@
   - name: install certbot
     apt:
       name: certbot
-      state: latest
-      
-  - name: set ufw to allow 8888/tcp for LE SNI
-    shell: ufw allow 8888/tcp
-    args:
-      executable: /bin/bash 
-      warn: no     
+      state: latest    
 
   - name: set ufw to allow https
     shell: ufw allow https

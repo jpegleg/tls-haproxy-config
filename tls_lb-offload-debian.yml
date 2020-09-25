@@ -1,8 +1,9 @@
-
-- name: Update and Upgrade debian
+---
+-
   hosts: haproxy
+  gather_facts: no
   tasks:
-
+  
   - name: upgrade all packages
     apt:
       upgrade: yes

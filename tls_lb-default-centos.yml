@@ -1,8 +1,7 @@
 ---
-
 -
-- name: Update and Upgrade centos
   hosts: haproxy
+  gather_facts: no
   tasks:
 
   - name: upgrade all packages

@@ -1,4 +1,6 @@
+---
 
+-
 - name: Update and Upgrade centos
   hosts: haproxy
   tasks:

@@ -29,11 +29,6 @@
     args:
       executable: /bin/bash
 
-
-- name: deploy config setup
-  hosts: haproxy
-  tasks:
-
   - name: deploy haproxy.cfg
     copy:
       src: /srv/haproxy.conf.tls_lb-default
